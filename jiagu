@@ -1,4 +1,5 @@
 #!/bin/bash
 java -jar /jiagu/jiagu.jar -login ${USERNAME} ${PASSWORD}
+java -jar /jiagu/jiagu.jar -importsign ${KEYSTORE_PATH} ${KEYSTORE_PASSWORD} ${ALIAS} ${ALIAS_PASSWORD}
 java -jar /jiagu/jiagu.jar -jiagu $@
 rm -f /jiagu/jiagu.db

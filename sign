@@ -1,2 +1,2 @@
 #!/bin/bash
-/sdk/build-tools/27.0.3/apksigner $@
+$ANDROID_HOME/build-tools/27.0.3/apksigner $@
