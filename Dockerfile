@@ -28,7 +28,8 @@ RUN apt-get -qq update \
 	&& chmod +x /usr/bin/sign \
 	&& rm 360jiagubao_mac.zip \
 	&& rm /sdk.zip \
-	&& mv ./ / \
+	&& cd ../ \
+	&& mv ./jiagu / \
 	&& rm -rf 360jiagu
 
 WORKDIR /jiagu
