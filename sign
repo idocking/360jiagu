@@ -1,0 +1,2 @@
+#!/bin/bash
+/sdk/build-tools/27.0.3/apksigner $@

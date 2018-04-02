@@ -1,0 +1,4 @@
+#!/bin/bash
+java -jar /jiagu/jiagu.jar -login ${USERNAME} ${PASSWORD}
+java -jar /jiagu/jiagu.jar -jiagu $@
+rm -f /jiagu/jiagu.db
