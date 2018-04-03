@@ -1,5 +1,37 @@
 #!/bin/bash
-java -jar /jiagu/jiagu.jar -login ${USERNAME} ${PASSWORD}
-java -jar /jiagu/jiagu.jar -importsign ${KEYSTORE_PATH} ${KEYSTORE_PASSWORD} ${ALIAS} ${ALIAS_PASSWORD}
-java -jar /jiagu/jiagu.jar -jiagu $@
-rm -f /jiagu/jiagu.db
+
+set -e
+
+if [ -z "${KEYSTORE_PATH}" ]; then
+	export JAR_TIMEOUT="600s"
+fi
+
+if [ -n "${USERNAME}" ] && [ -n "${PASSWORD}" ]; then
+	timeout ${JAR_TIMEOUT} java -jar /jiagu/jiagu.jar -login ${USERNAME} ${PASSWORD}
+fi
+
+if [ -n "${KEYSTORE_PATH}" ]; then
+	timeout ${JAR_TIMEOUT} java -jar /jiagu/jiagu.jar -importsign ${KEYSTORE_PATH} ${KEYSTORE_PASSWORD} ${ALIAS} ${ALIAS_PASSWORD}
+fi
+
+java -jar /jiagu/jiagu.jar -config -update${CONF_UPDATE} -crashlog${CONF_CRASHLOG} -x86${CONF_X86} -msg${CONF_MSG} -business${CONF_BUSINESS} -nocert${CONF_NOCERT}
+
+if [ -n "${OUTPUT}" ]; then
+	if [ "${AUTO_SIGN}" == "1" ]; then
+		timeout ${JAR_TIMEOUT} java -jar /jiagu/jiagu.jar -jiagu $1 ${OUTPUT} -autosign
+		cd ${OUTPUT}
+		for f in *_jiagu.apk; do
+			echo "Signing ${OUTPUT}/$f"
+			sign $f
+		done
+		cd -
+	else
+		timeout ${JAR_TIMEOUT} java -jar /jiagu/jiagu.jar -jiagu $1 ${OUTPUT}
+	fi
+else
+	timeout ${JAR_TIMEOUT} java -jar /jiagu/jiagu.jar -jiagu $@
+fi
+
+if [ -n "${USERNAME}" ] && [ -n "${PASSWORD}" ] && [ -f "/jiagu/jiagu.db" ]; then
+	rm -f /jiagu/jiagu.db
+fi

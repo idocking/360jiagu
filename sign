@@ -1,2 +1,7 @@
 #!/bin/bash
-$ANDROID_HOME/build-tools/27.0.3/apksigner $@
+
+if [ -n "${KEYSTORE_PATH}" ] && [ -n "${KEYSTORE_PASSWORD}" ] && [ -n "${ALIAS}" ] && [ -n "${ALIAS_PASSWORD}" ]; then
+	/jiagu/java/bin/apksigner sign --ks ${KEYSTORE_PATH} --ks-pass "env:KEYSTORE_PASSWORD" --ks-key-alias ${ALIAS} --key-pass "env:ALIAS_PASSWORD" $@
+else
+	/jiagu/java/bin/apksigner sign $@
+fi
